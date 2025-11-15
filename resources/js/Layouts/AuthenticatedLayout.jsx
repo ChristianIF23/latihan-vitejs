@@ -1,30 +1,50 @@
-import ApplicationLogo from '@/Components/ApplicationLogo'
-import Dropdown from '@/Components/Dropdown'
-import NavLink from '@/Components/NavLink'
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink'
-import { Link, usePage } from '@inertiajs/react'
-import { useState } from 'react'
+/**
+ * AuthenticatedLayout
+ * --------------------
+ * Layout utama untuk halaman yang membutuhkan autentikasi.
+ * Mencakup:
+ * - Navbar responsif
+ * - Dropdown user (profile + logout)
+ * - Mobile navigation menu
+ * - Area konten
+ *
+
+ */
+
+import ApplicationLogo from '@/Components/ApplicationLogo';
+import Dropdown from '@/Components/Dropdown';
+import NavLink from '@/Components/NavLink';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import { Link, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function AuthenticatedLayout({ children }) {
-  const user = usePage().props.auth.user
-  const [showingNavigationDropdown, setShowingNavigationDropdown] =
-    useState(false)
+  const user = usePage().props.auth.user;
 
-  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U'
+  // State untuk mobile navigation dropdown
+  const [showingNavigationDropdown, setShowingNavigationDropdown] =
+    useState(false);
+
+  // Inisial avatar user (misal: "C" untuk Christian)
+  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
-      {/* NAVIGATION */}
+      
+      {/* NAVIGATION BAR */}
       <nav className="bg-slate-900 border-b border-slate-800 shadow-lg">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
 
-            {/* LOGO + MENU */}
+            {/* LEFT SECTION: LOGO + MAIN MENU */}
             <div className="flex items-center gap-8">
+
+              {/* LOGO */}
               <Link href="/" className="flex items-center gap-2">
                 <ApplicationLogo className="block h-9 w-auto invert" />
               </Link>
 
+              {/* DESKTOP NAVIGATION */}
               <div className="hidden sm:flex sm:items-center sm:space-x-6">
                 <NavLink
                   href={route('todos.index')}
@@ -36,9 +56,11 @@ export default function AuthenticatedLayout({ children }) {
               </div>
             </div>
 
-            {/* AVATAR */}
+            {/* RIGHT SECTION: USER AVATAR (DESKTOP) */}
             <div className="hidden sm:flex sm:items-center">
               <Dropdown>
+
+                {/* Trigger Avatar Button */}
                 <Dropdown.Trigger>
                   <button
                     type="button"
@@ -48,10 +70,12 @@ export default function AuthenticatedLayout({ children }) {
                   </button>
                 </Dropdown.Trigger>
 
+                {/* Dropdown Menu */}
                 <Dropdown.Content className="bg-slate-800 text-slate-100 border-slate-700">
                   <Dropdown.Link href={route('profile.edit')}>
                     Profile
                   </Dropdown.Link>
+
                   <Dropdown.Link
                     href={route('logout')}
                     method="post"
@@ -63,7 +87,7 @@ export default function AuthenticatedLayout({ children }) {
               </Dropdown>
             </div>
 
-            {/* MOBILE MENU BUTTON */}
+            {/* MOBILE MENU BUTTON (HAMBURGER) */}
             <div className="flex items-center sm:hidden">
               <button
                 onClick={() =>
@@ -77,6 +101,7 @@ export default function AuthenticatedLayout({ children }) {
                   fill="none"
                   viewBox="0 0 24 24"
                 >
+                  {/* Menu Icon */}
                   <path
                     className={!showingNavigationDropdown ? 'inline-flex' : 'hidden'}
                     strokeLinecap="round"
@@ -84,6 +109,7 @@ export default function AuthenticatedLayout({ children }) {
                     strokeWidth="2"
                     d="M4 6h16M4 12h16M4 18h16"
                   />
+                  {/* Close Icon */}
                   <path
                     className={showingNavigationDropdown ? 'inline-flex' : 'hidden'}
                     strokeLinecap="round"
@@ -94,11 +120,17 @@ export default function AuthenticatedLayout({ children }) {
                 </svg>
               </button>
             </div>
+
           </div>
         </div>
 
-        {/* MOBILE MENU */}
-        <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden bg-slate-900'}>
+        {/* MOBILE NAVIGATION MENU */}
+        <div
+          className={
+            (showingNavigationDropdown ? 'block' : 'hidden') +
+            ' sm:hidden bg-slate-900'
+          }
+        >
           <div className="space-y-1 pb-3 pt-2">
             <ResponsiveNavLink
               href={route('todos.index')}
@@ -108,6 +140,7 @@ export default function AuthenticatedLayout({ children }) {
             </ResponsiveNavLink>
           </div>
 
+          {/* USER INFO SECTION */}
           <div className="border-t border-slate-800 pb-1 pt-4">
             <div className="px-4">
               <div className="text-base font-medium text-slate-100">
@@ -118,11 +151,17 @@ export default function AuthenticatedLayout({ children }) {
               </div>
             </div>
 
+            {/* USER ACTIONS */}
             <div className="mt-3 space-y-1">
               <ResponsiveNavLink href={route('profile.edit')}>
                 Profile
               </ResponsiveNavLink>
-              <ResponsiveNavLink method="post" href={route('logout')} as="button">
+
+              <ResponsiveNavLink
+                method="post"
+                href={route('logout')}
+                as="button"
+              >
                 Log Out
               </ResponsiveNavLink>
             </div>
@@ -130,8 +169,10 @@ export default function AuthenticatedLayout({ children }) {
         </div>
       </nav>
 
-      {/* CONTENT */}
-      <main className="pt-6 px-4">{children}</main>
+      {/* CONTENT AREA */}
+      <main className="pt-6 px-4">
+        {children}
+      </main>
     </div>
-  )
+  );
 }

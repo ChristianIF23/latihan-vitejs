@@ -13,36 +13,45 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Atribut yang boleh diisi secara mass assignment.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name',     // Nama user
+        'email',    // Email user
+        'password', // Password user (akan di-hash secara otomatis)
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Atribut yang akan disembunyikan ketika model diserialisasi
+     * (misal saat dikirim ke frontend dengan Inertia).
      *
      * @var list<string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password',       // Password tidak boleh terlihat di response
+        'remember_token', // Token remember-me
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Cast otomatis untuk beberapa field.
      *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at' => 'datetime', // Cast ke carbon date
+            'password' => 'hashed',           // Laravel otomatis meng-hash password
         ];
+    }
+
+    /**
+     * Relasi: satu user punya banyak Todo.
+     */
+    public function todos()
+    {
+        return $this->hasMany(Todo::class);
     }
 }

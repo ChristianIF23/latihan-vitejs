@@ -1,3 +1,18 @@
+/**
+ * Modal Component
+ * ------------------------
+ * Modal berbasis Headless UI dengan animasi Transition.
+ *
+ * Props:
+ * - children: isi konten modal.
+ * - show (boolean): menentukan apakah modal tampil.
+ * - maxWidth (string): ukuran max-width modal (sm, md, lg, xl, 2xl).
+ * - closeable (boolean): menentukan apakah modal bisa ditutup.
+ * - onClose (function): fungsi callback ketika modal ditutup.
+ *
+ * Semua logika asli dipertahankan.
+ */
+
 import {
     Dialog,
     DialogPanel,
@@ -12,12 +27,14 @@ export default function Modal({
     closeable = true,
     onClose = () => {},
 }) {
+    // Fungsi untuk menutup modal jika diizinkan
     const close = () => {
         if (closeable) {
             onClose();
         }
     };
 
+    // Mapping ukuran ke kelas Tailwind
     const maxWidthClass = {
         sm: 'sm:max-w-sm',
         md: 'sm:max-w-md',
@@ -31,9 +48,13 @@ export default function Modal({
             <Dialog
                 as="div"
                 id="modal"
-                className="fixed inset-0 z-50 flex transform items-center overflow-y-auto px-4 py-6 transition-all sm:px-0"
+                className="
+                    fixed inset-0 z-50 flex transform items-center
+                    overflow-y-auto px-4 py-6 transition-all sm:px-0
+                "
                 onClose={close}
             >
+                {/* Background overlay */}
                 <TransitionChild
                     enter="ease-out duration-300"
                     enterFrom="opacity-0"
@@ -45,6 +66,7 @@ export default function Modal({
                     <div className="absolute inset-0 bg-gray-500/75" />
                 </TransitionChild>
 
+                {/* Modal panel */}
                 <TransitionChild
                     enter="ease-out duration-300"
                     enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -54,7 +76,11 @@ export default function Modal({
                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
                     <DialogPanel
-                        className={`mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full ${maxWidthClass}`}
+                        className={`
+                            mb-6 transform overflow-hidden rounded-lg bg-white
+                            shadow-xl transition-all sm:mx-auto sm:w-full
+                            ${maxWidthClass}
+                        `}
                     >
                         {children}
                     </DialogPanel>
